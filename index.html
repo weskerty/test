@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux One Clic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="web/favicon.ico">
+    <style>
+        /* Estilos similares a los anteriores */
+    </style>
+</head>
+<body>
+    <video autoplay muted loop id="bg-video" preload="auto">
+        <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4">
+        Tu navegador no soporta el elemento de video.
+    </video>
+
+    <div class="content" id="content"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            // Detectar el idioma del navegador
+            const userLang = navigator.language || navigator.userLanguage;
+            let htmlFile = 'web/ingles.html'; // Cargar en inglés por defecto
+
+            if (userLang.startsWith('es')) {
+                htmlFile = 'web/es.html'; // Cargar en español
+            } else if (userLang.startsWith('pt')) {
+                htmlFile = 'web/pt.html'; // Cargar en portugués
+            }
+
+            // Función para cargar contenido HTML
+            async function loadContent(file) {
+                try {
+                    const response = await fetch(file);
+                    if (!response.ok) throw new Error(`Error fetching ${file}: ${response.statusText}`);
+                    const htmlContent = await response.text();
+                    document.getElementById('content').innerHTML = htmlContent;
+
+                    // Inicializar los enlaces dinámicos
+                    initializeLinks();
+                    
+                    // Cargar Disqus
+                    loadDisqus();
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                }
+            }
+
+            // Función para interceptar los clics en los enlaces
+            function initializeLinks() {
+                const links = document.querySelectorAll('a'); 
+                links.forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault(); // Prevenir que el enlace recargue la página
+
+                        // Obtener el archivo objetivo del enlace y cambiar según idioma
+                        let targetFile = this.getAttribute('href');
+                        
+                        // Comprobar si el enlace es parte de la estructura interna
+                        if (targetFile.includes('web/otros')) {
+                            if (userLang.startsWith('es')) {
+                                targetFile = targetFile.replace('ingles', 'es'); // Cambiar a español
+                            } else if (userLang.startsWith('pt')) {
+                                targetFile = targetFile.replace('ingles', 'pt'); // Cambiar a portugués
+                            }
+                        }
+                        
+                        // Cargar el archivo ajustado
+                        loadContent(targetFile);
+                    });
+                });
+            }
+
+            // Cargar Disqus (función similar)
+            function loadDisqus() {
+                const disqusDiv = document.createElement('div');
+                disqusDiv.id = 'disqus_thread';
+                document.getElementById('content').appendChild(disqusDiv);
+
+                var disqus_config = function () {
+                    this.page.url = window.location.href;
+                    this.page.identifier = document.title;
+                };
+
+                (function() {
+                    var d = document, s = d.createElement('script');
+                    s.src = 'https://linuxoneclic.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+            }
+
+            // Cargar el contenido inicial
+            loadContent(htmlFile);
+        });
+    </script>
+
+    <noscript> JavaScript OFF.</noscript>
+</body>
+</html>
