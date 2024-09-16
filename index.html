@@ -3,79 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hispanic Galaxy</title>
+    <title>🔮Mystic Bot🔮</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Comfortaa', sans-serif;
-            color: white;
-            overflow-x: hidden;
-        }
-        video#bg-video {
-            position: fixed; 
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: translate(-50%, -50%);
-            z-index: -1; 
-        }
-        a {
-            color: lightblue;
-            cursor: pointer;
-        }
-        blockquote {
-            margin: 20px 0;
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-left: 5px solid #ccc;
-            color: white;
-        }
-        code {
-            font-family: monospace;
-            padding: 2px 4px;
-            border-radius: 4px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-left: 5px solid #ccc;
-            color: white;
-        }
-        .content {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 800px;
-            margin: 50px auto;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 1;
-            # Fondo Borroso. backdrop-filter: blur(10px);
-        }
-
-        h1, p {
-            color: white;
-        }
-        
-        #disqus_thread {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="web/estilo.css"> <!-- Para Cambiar el Estilo/Tema facilmente -->
 </head>
 <body>
     <video autoplay muted loop id="bg-video">
         <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
-        Tu navegador no soporta el elemento de video.
+        Error con Video
     </video>
 
     <div class="content" id="content">
-        <p>Contenido inicial cargado dinámicamente.</p>
+        <p>⌛Cargando⏳</p>
     </div>
 
     <script>
-        // Función para cargar el contenido dinámico
         async function loadContent(url) {
             try {
                 const response = await fetch(url);
@@ -83,7 +26,7 @@
                 const htmlContent = await response.text();
                 document.getElementById('content').innerHTML = htmlContent;
 
-                // Cargar Disqus en la nueva sección
+                // Este es la seccion de Disqus, se puede cambiar a uno personalizado.
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
                 document.getElementById('content').appendChild(disqusDiv);
@@ -105,7 +48,6 @@
             }
         }
 
-        // Función para obtener la variante de idioma del enlace
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
 
@@ -119,10 +61,9 @@
             }
         }
 
-        // Cargar contenido inicial basado en el idioma
         document.addEventListener("DOMContentLoaded", function() {
             const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; // Archivo predeterminado
+            let htmlFile = 'web/ingles.html'; 
 
             if (userLang.startsWith('es')) {
                 htmlFile = 'web/es.html'; 
@@ -130,38 +71,34 @@
                 htmlFile = 'web/pt.html'; 
             }
 
-            // Cargar contenido inicial según el idioma detectado
             loadContent(htmlFile);
         });
 
-        // Manejador de eventos para interceptar enlaces internos y externos
         document.addEventListener('click', function(event) {
             const target = event.target;
 
-            // Si el elemento clicado es un enlace
             if (target.tagName === 'A') {
                 let href = target.getAttribute('href');
 
-                // Verificar si es un enlace interno o relativo
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
-                    event.preventDefault(); // Evita la carga completa de la página
+                    event.preventDefault(); 
 
-                    // Si el enlace no tiene un archivo de idioma explícito, se añade dinámicamente
                     if (!href.match(/(ingles|es|pt)\.html$/)) {
-                        href = getLocalizedUrl(href); // Ajustar la URL al idioma
+                        href = getLocalizedUrl(href); 
                     }
 
-                    loadContent(href); // Carga el contenido dinámicamente
+                    loadContent(href); 
                 } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    // Para enlaces externos, ajustamos la URL según el idioma
-                    event.preventDefault(); // Detenemos el comportamiento predeterminado
-                    href = getLocalizedUrl(href); // Ajustar la URL al idioma
-                    window.location.href = href; // Redirigir a la URL ajustada
+                   
+                    event.preventDefault(); 
+                    href = getLocalizedUrl(href); 
+                    window.location.href = href; 
                 }
             }
         });
     </script>
 
+<!-- Este es el Widget de Discord, se puede personalizar para tu Server -->
     <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
         new Crate({
             server: '1278571215635877908', // Basu
@@ -169,6 +106,6 @@
         })
     </script>
 
-    <noscript> JavaScript OFF.</noscript>
+    <noscript> JavaScript OFF. Se Requiere JS Encendido para poder Visualizar Esto. En caso de no poder Verlo ve al Repositorio.</noscript>
 </body>
 </html>
