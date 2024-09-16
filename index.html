@@ -3,78 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linux One Clic</title>
+    <title>Hispanic Galaxy</title>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="web/favicon.ico">
     <style>
-        /* Estilos similares a los anteriores */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Comfortaa', sans-serif;
+            color: white;
+            overflow-x: hidden; 
+        }
+        video#bg-video {
+            position: fixed; 
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+            z-index: -1; 
+        }
+        a {
+            color: lightblue; 
+        }
+        blockquote {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-left: 5px solid #ccc;
+            color: white;
+        }
+        code {
+            font-family: monospace;
+            padding: 2px 4px;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-left: 5px solid #ccc;
+            color: white;
+        }
+        .content {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 50px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        h1, p {
+            color: white;
+        }
+        
+        #disqus_thread {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <video autoplay muted loop id="bg-video" preload="auto">
-        <source src="https://github.com/user-attachments/assets/39cbf647-28cd-4604-a717-ada1439d274b" type="video/mp4">
+    <video autoplay muted loop id="bg-video">
+        <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
         Tu navegador no soporta el elemento de video.
     </video>
 
-    <div class="content" id="content"></div>
+    <div class="content" id="content">
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", async function() {
-            // Detectar el idioma del navegador
             const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; // Cargar en inglés por defecto
+            let htmlFile = 'web/ingles.html'; // Por defecto, cargar inglés
 
+            // Detectar el idioma
             if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html'; // Cargar en español
+                htmlFile = 'web/es.html'; // Español
             } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html'; // Cargar en portugués
+                htmlFile = 'web/pt.html'; // Portugués
             }
 
-            // Función para cargar contenido HTML
-            async function loadContent(file) {
+            // Función para cargar contenido dinámico
+            async function loadContent(filePath, pushState = true) {
                 try {
-                    const response = await fetch(file);
-                    if (!response.ok) throw new Error(`Error fetching ${file}: ${response.statusText}`);
+                    const response = await fetch(filePath);
+                    if (!response.ok) throw new Error(`Error fetching ${filePath}: ${response.statusText}`);
                     const htmlContent = await response.text();
                     document.getElementById('content').innerHTML = htmlContent;
 
-                    // Inicializar los enlaces dinámicos
+                    // Actualizar la URL sin recargar la página
+                    if (pushState) {
+                        history.pushState(null, null, filePath);
+                    }
+
+                    // Inicializar nuevamente los enlaces dinámicos
                     initializeLinks();
-                    
-                    // Cargar Disqus
+
+                    // Recargar Disqus
                     loadDisqus();
+
                 } catch (error) {
                     console.error(error);
                     document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
                 }
             }
 
-            // Función para interceptar los clics en los enlaces
+            // Función para inicializar los enlaces dinámicos
             function initializeLinks() {
                 const links = document.querySelectorAll('a'); 
                 links.forEach(link => {
                     link.addEventListener('click', function(event) {
-                        event.preventDefault(); // Prevenir que el enlace recargue la página
+                        const href = this.getAttribute('href');
 
-                        // Obtener el archivo objetivo del enlace y cambiar según idioma
-                        let targetFile = this.getAttribute('href');
-                        
-                        // Comprobar si el enlace es parte de la estructura interna
-                        if (targetFile.includes('web/otros')) {
+                        // Comprobar si es un enlace interno (parte del mismo repositorio)
+                        if (href.includes('web/')) {
+                            event.preventDefault(); // Prevenir recarga completa de la página
+
+                            // Detectar el idioma actual y modificar la URL si es necesario
+                            let newFile = href;
                             if (userLang.startsWith('es')) {
-                                targetFile = targetFile.replace('ingles', 'es'); // Cambiar a español
+                                newFile = href.replace('ingles', 'es');
                             } else if (userLang.startsWith('pt')) {
-                                targetFile = targetFile.replace('ingles', 'pt'); // Cambiar a portugués
+                                newFile = href.replace('ingles', 'pt');
                             }
+
+                            // Cargar el nuevo archivo HTML dentro de la página
+                            loadContent(newFile);
                         }
-                        
-                        // Cargar el archivo ajustado
-                        loadContent(targetFile);
                     });
                 });
             }
 
-            // Cargar Disqus (función similar)
+            // Función para recargar Disqus (si es necesario)
             function loadDisqus() {
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
@@ -85,17 +146,29 @@
                     this.page.identifier = document.title;
                 };
 
-                (function() {
+                (function() {  
                     var d = document, s = d.createElement('script');
-                    s.src = 'https://linuxoneclic.disqus.com/embed.js';
+                    s.src = 'https://amigos-steam.disqus.com/embed.js';
                     s.setAttribute('data-timestamp', +new Date());
                     (d.head || d.body).appendChild(s);
                 })();
             }
 
+            // Manejar el evento de navegación hacia atrás/adelante del navegador
+            window.onpopstate = function() {
+                loadContent(window.location.pathname, false); // Cargar contenido sin cambiar la URL
+            };
+
             // Cargar el contenido inicial
             loadContent(htmlFile);
         });
+    </script>
+
+    <script src='https://cdn.jsdelivr.net/npm/@widgetbot/crate@3' async defer>
+        new Crate({
+            server: '1278571215635877908', // Basu
+            channel: '1280976262504124508' // #basurero-sexta-feira
+        })
     </script>
 
     <noscript> JavaScript OFF.</noscript>
