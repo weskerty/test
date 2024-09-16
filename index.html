@@ -52,7 +52,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 1;
-            backdrop-filter: blur(10px);
+            # Fondo Borroso. backdrop-filter: blur(10px);
         }
 
         h1, p {
@@ -75,29 +75,18 @@
     </div>
 
     <script>
-        // URL principal donde siempre redirigiremos al usuario al presionar el botón de retroceso
-        const mainPageUrl = 'web/ingles.html';
-
         // Función para cargar el contenido dinámico
-        async function loadContent(url, updateHistory = true) {
+        async function loadContent(url) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
                 const htmlContent = await response.text();
                 document.getElementById('content').innerHTML = htmlContent;
 
-                // Actualiza la URL en la barra de direcciones sin recargar la página
-                if (updateHistory) {
-                    history.pushState({ url: url }, '', url);
-                }
-
                 // Cargar Disqus en la nueva sección
-                const disqusDiv = document.getElementById('disqus_thread');
-                if (!disqusDiv) {
-                    const newDisqusDiv = document.createElement('div');
-                    newDisqusDiv.id = 'disqus_thread';
-                    document.getElementById('content').appendChild(newDisqusDiv);
-                }
+                const disqusDiv = document.createElement('div');
+                disqusDiv.id = 'disqus_thread';
+                document.getElementById('content').appendChild(disqusDiv);
 
                 var disqus_config = function () {
                     this.page.url = window.location.href; 
@@ -116,18 +105,33 @@
             }
         }
 
-        // Detectar cuando el usuario navega hacia atrás/adelante
-        window.onpopstate = function(event) {
-            // Siempre redirige a la página principal al presionar el botón de retroceso
-            if (event.state && event.state.url) {
-                loadContent(mainPageUrl, false); // Cargar la página principal sin modificar el historial
+        // Función para obtener la variante de idioma del enlace
+        function getLocalizedUrl(url) {
+            const userLang = navigator.language || navigator.userLanguage;
+
+            // Identificar el sufijo de idioma
+            if (userLang.startsWith('es')) {
+                return url + 'es.html';
+            } else if (userLang.startsWith('pt')) {
+                return url + 'pt.html';
+            } else {
+                return url + 'ingles.html';
             }
-        };
+        }
 
         // Cargar contenido inicial basado en el idioma
         document.addEventListener("DOMContentLoaded", function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            let htmlFile = 'web/ingles.html'; // Archivo predeterminado
+
+            if (userLang.startsWith('es')) {
+                htmlFile = 'web/es.html'; 
+            } else if (userLang.startsWith('pt')) {
+                htmlFile = 'web/pt.html'; 
+            }
+
             // Cargar contenido inicial según el idioma detectado
-            loadContent(mainPageUrl, false);
+            loadContent(htmlFile);
         });
 
         // Manejador de eventos para interceptar enlaces internos y externos
