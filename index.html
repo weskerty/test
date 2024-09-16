@@ -56,6 +56,12 @@
                 return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
                 return url + 'pt.html';
+            } else if (userLang.startsWith('fr')) {
+                return url + 'fr.html';
+            } else if (userLang.startsWith('ru')) {
+                return url + 'ru.html';
+            } else if (userLang.startsWith('ar')) {
+                return url + 'ar.html';
             } else {
                 return url + 'ingles.html';
             }
@@ -69,6 +75,12 @@
                 htmlFile = 'web/es.html'; 
             } else if (userLang.startsWith('pt')) {
                 htmlFile = 'web/pt.html'; 
+            } else if (userLang.startsWith('fr')) {
+                htmlFile = 'web/fr.html'; 
+            } else if (userLang.startsWith('ru')) {
+                htmlFile = 'web/ru.html'; 
+            } else if (userLang.startsWith('ar')) {
+                htmlFile = 'web/ar.html'; 
             }
 
             loadContent(htmlFile);
@@ -86,7 +98,7 @@
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
                     event.preventDefault(); 
 
-                    if (!href.match(/(ingles|es|pt)\.html$/)) {
+                    if (!href.match(/(ingles|es|pt|fr|ru|ar)\.html$/)) {
                         href = getLocalizedUrl(href); 
                     }
 
