@@ -75,6 +75,9 @@
     </div>
 
     <script>
+        // URL principal donde siempre redirigiremos al usuario al presionar el botón de retroceso
+        const mainPageUrl = 'web/ingles.html';
+
         // Función para cargar el contenido dinámico
         async function loadContent(url, updateHistory = true) {
             try {
@@ -113,40 +116,18 @@
             }
         }
 
-        // Función para obtener la variante de idioma del enlace
-        function getLocalizedUrl(url) {
-            const userLang = navigator.language || navigator.userLanguage;
-
-            // Identificar el sufijo de idioma
-            if (userLang.startsWith('es')) {
-                return url + 'es.html';
-            } else if (userLang.startsWith('pt')) {
-                return url + 'pt.html';
-            } else {
-                return url + 'ingles.html';
-            }
-        }
-
         // Detectar cuando el usuario navega hacia atrás/adelante
         window.onpopstate = function(event) {
+            // Siempre redirige a la página principal al presionar el botón de retroceso
             if (event.state && event.state.url) {
-                loadContent(event.state.url, false); // Cargar sin modificar el historial
+                loadContent(mainPageUrl, false); // Cargar la página principal sin modificar el historial
             }
         };
 
         // Cargar contenido inicial basado en el idioma
         document.addEventListener("DOMContentLoaded", function() {
-            const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; // Archivo predeterminado
-
-            if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html'; 
-            } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html'; 
-            }
-
             // Cargar contenido inicial según el idioma detectado
-            loadContent(htmlFile, false);
+            loadContent(mainPageUrl, false);
         });
 
         // Manejador de eventos para interceptar enlaces internos y externos
