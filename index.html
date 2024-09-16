@@ -52,7 +52,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 1;
-            # Fondo Borroso. backdrop-filter: blur(10px);
+            /* Fondo Borroso. backdrop-filter: blur(10px); */
         }
 
         h1, p {
@@ -139,21 +139,21 @@
         });
 
         document.addEventListener('click', function(event) {
-            const target = event.target;
+            const target = event.target.closest('a'); // Cambié esto para usar closest('a')
+            if (target && (target.href.startsWith('web/') || target.href.startsWith('./') || target.href.startsWith('/'))) {
+                event.preventDefault(); 
 
-                if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
-                    event.preventDefault(); 
-
-                    if (!href.match(/(ingles|es|pt)\.html$/)) {
-                        href = getLocalizedUrl(href); // Ajustar la URL al idioma
-                    }
-
-                    loadContent(href); 
-                } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    event.preventDefault(); 
-                    href = getLocalizedUrl(href); 
-                    window.location.href = href; 
+                let href = target.href;
+                if (!href.match(/(ingles|es|pt)\.html$/)) {
+                    href = getLocalizedUrl(href); // Ajustar la URL al idioma
                 }
+
+                loadContent(href); 
+            } else if (target && (target.href.startsWith('http://') || target.href.startsWith('https://'))) {
+                event.preventDefault(); 
+                let href = target.href;
+                href = getLocalizedUrl(href); 
+                window.location.href = href; 
             }
         });
     </script>
