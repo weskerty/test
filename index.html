@@ -22,10 +22,11 @@
             height: 100%;
             object-fit: cover;
             transform: translate(-50%, -50%);
-            z-index: -1;
+            z-index: -1; 
         }
         a {
             color: lightblue;
+            cursor: pointer;
         }
         blockquote {
             margin: 20px 0;
@@ -51,7 +52,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 1;
-            backdrop-filter: blur(5px);
+            # Fondo Borroso. backdrop-filter: blur(10px);
         }
 
         h1, p {
@@ -64,104 +65,80 @@
     </style>
 </head>
 <body>
-    <!-- Este video de fondo no se recargará al navegar -->
     <video autoplay muted loop id="bg-video">
         <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
-        Tu navegador no soporta la reproducción de videos.
+        Tu navegador no soporta el elemento de video.
     </video>
 
-    <!-- El contenido dinámico se cargará aquí -->
     <div class="content" id="content">
+        <p>Contenido inicial cargado dinámicamente.</p>
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", async function() {
-            const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; // Por defecto, inglés.
+        async function loadContent(url, updateHistory = true) {
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Error fetching ${url}: ${response.statusText}`);
+                const htmlContent = await response.text();
+                document.getElementById('content').innerHTML = htmlContent;
 
-            // Detectar el idioma, se pueden agregar más idiomas aquí.
-            if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html'; // Español
-            } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html'; // Portugués
-            }
-
-            // Función para cargar el contenido dinámico en el div sin recargar la página completa.
-            async function loadContent(filePath, pushState = true) {
-                try {
-                    const response = await fetch(filePath);
-                    if (!response.ok) throw new Error(`Error al cargar ${filePath}: ${response.statusText}`);
-                    const htmlContent = await response.text();
-                    document.getElementById('content').innerHTML = htmlContent;
-
-                    // Actualiza la URL en la barra de navegación sin recargar la página.
-                    if (pushState) {
-                        history.pushState(null, null, filePath);
-                    }
-
-                    // Inicializa los enlaces dentro del nuevo contenido cargado.
-                    initializeLinks();
-
-                    // Recargar Disqus.
-                    loadDisqus();
-
-                } catch (error) {
-                    console.error(error);
-                    document.getElementById('content').innerHTML = `<p>Error cargando el contenido: ${error.message}</p>`;
+                // Actualiza la URL en la barra de direcciones sin recargar la página
+                if (updateHistory) {
+                    history.pushState({ url: url }, '', url);
                 }
-            }
 
-            // Función para interceptar los clics en los enlaces y cargar contenido sin recargar la página.
-            function initializeLinks() {
-                const links = document.querySelectorAll('a');
-                links.forEach(link => {
-                    link.addEventListener('click', function(event) {
-                        const href = this.getAttribute('href');
-
-                        // Verificar si el enlace apunta a un archivo HTML dentro de la carpeta web.
-                        if (href.includes('web/')) {
-                            event.preventDefault(); // Prevenir la recarga completa de la página.
-
-                            // Detectar el idioma y ajustar la URL del archivo.
-                            let newFile = href;
-                            if (userLang.startsWith('es')) {
-                                newFile = href.replace('ingles', 'es');
-                            } else if (userLang.startsWith('pt')) {
-                                newFile = href.replace('ingles', 'pt');
-                            }
-
-                            // Cargar el nuevo contenido en el div sin recargar la página.
-                            loadContent(newFile);
-                        }
-                    });
-                });
-            }
-
-            // Función para cargar y mostrar los comentarios de Disqus.
-            function loadDisqus() {
+                // Cargar Disqus en la nueva sección
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
                 document.getElementById('content').appendChild(disqusDiv);
 
                 var disqus_config = function () {
-                    this.page.url = window.location.href; // URL actual
-                    this.page.identifier = document.title; // Identificador basado en el título de la página
+                    this.page.url = window.location.href; 
+                    this.page.identifier = document.title;
                 };
 
-                (function() {
+                (function() {  
                     var d = document, s = d.createElement('script');
-                    s.src = 'https://amigos-steam.disqus.com/embed.js';
+                    s.src = 'https://amigos-steam.disqus.com/embed.js'; 
                     s.setAttribute('data-timestamp', +new Date());
                     (d.head || d.body).appendChild(s);
                 })();
+            } catch (error) {
+                console.error(error);
+                document.getElementById('content').innerHTML = `<p>Error loading content: ${error.message}</p>`;
+            }
+        }
+
+        // Manejador de eventos para los enlaces internos
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+
+            // Si el elemento clicado es un enlace interno
+            if (target.tagName === 'A' && target.getAttribute('href').startsWith('web/')) {
+                event.preventDefault(); // Evita la carga completa de la página
+                const url = target.getAttribute('href');
+                loadContent(url); // Carga el contenido dinámicamente
+            }
+        });
+
+        // Detectar cuando el usuario navega hacia atrás/adelante
+        window.onpopstate = function(event) {
+            if (event.state && event.state.url) {
+                loadContent(event.state.url, false); // Cargar sin modificar el historial
+            }
+        };
+
+        // Cargar contenido inicial basado en el idioma
+        document.addEventListener("DOMContentLoaded", function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            let htmlFile = 'web/ingles.html';
+
+            if (userLang.startsWith('es')) {
+                htmlFile = 'web/es.html'; 
+            } else if (userLang.startsWith('pt')) {
+                htmlFile = 'web/pt.html'; 
             }
 
-            // Manejar la navegación del historial (al usar los botones de atrás/adelante del navegador).
-            window.onpopstate = function() {
-                loadContent(window.location.pathname, false); // Cargar contenido sin cambiar la URL.
-            };
-
-            // Cargar el contenido inicial basado en el idioma.
             loadContent(htmlFile);
         });
     </script>
@@ -173,6 +150,6 @@
         })
     </script>
 
-    <noscript> JavaScript está desactivado.</noscript>
+    <noscript> JavaScript OFF.</noscript>
 </body>
 </html>
