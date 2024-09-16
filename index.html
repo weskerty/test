@@ -67,15 +67,14 @@
 <body>
     <video autoplay muted loop id="bg-video">
         <source src="https://github.com/user-attachments/assets/fd54742d-a7e9-49f4-b268-da16689918c1" type="video/mp4">
-        Tu navegador no soporta el elemento de video.
+        Fallo el Video ⛔
     </video>
 
     <div class="content" id="content">
-        <p>Contenido inicial cargado dinámicamente.</p>
+        <p>⏳Cargando⌛</p>
     </div>
 
     <script>
-        // Función para cargar el contenido dinámico
         async function loadContent(url, updateHistory = true) {
             try {
                 const response = await fetch(url);
@@ -83,12 +82,10 @@
                 const htmlContent = await response.text();
                 document.getElementById('content').innerHTML = htmlContent;
 
-                // Actualiza la URL en la barra de direcciones sin recargar la página
                 if (updateHistory) {
                     history.pushState({ url: url }, '', url);
                 }
 
-                // Cargar Disqus en la nueva sección
                 const disqusDiv = document.createElement('div');
                 disqusDiv.id = 'disqus_thread';
                 document.getElementById('content').appendChild(disqusDiv);
@@ -110,11 +107,9 @@
             }
         }
 
-        // Función para obtener la variante de idioma del enlace
         function getLocalizedUrl(url) {
             const userLang = navigator.language || navigator.userLanguage;
 
-            // Identificar el sufijo de idioma
             if (userLang.startsWith('es')) {
                 return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
@@ -124,59 +119,40 @@
             }
         }
 
-        // Detectar cuando el usuario navega hacia atrás/adelante
         window.onpopstate = function(event) {
             if (event.state && event.state.url) {
-                loadContent(event.state.url, false); // Cargar sin modificar el historial
+                loadContent(event.state.url, false); 
             }
         };
 
-        // Cargar contenido inicial basado en la URL actual (para soportar "Atrás" o recarga)
         document.addEventListener("DOMContentLoaded", function() {
-            let currentUrl = window.location.pathname;
+            const userLang = navigator.language || navigator.userLanguage;
+            let htmlFile = 'web/ingles.html'; 
 
-            // Si la URL actual es la raíz o el index.html, cargamos la página principal
-            if (currentUrl === '/' || currentUrl.endsWith('index.html')) {
-                const userLang = navigator.language || navigator.userLanguage;
-                let htmlFile = 'web/ingles.html'; // Archivo predeterminado
-
-                if (userLang.startsWith('es')) {
-                    htmlFile = 'web/es.html'; 
-                } else if (userLang.startsWith('pt')) {
-                    htmlFile = 'web/pt.html'; 
-                }
-
-                // Cargar contenido inicial según el idioma detectado
-                loadContent(htmlFile, false);
-            } else {
-                // Si la URL es un enlace externo, cargamos el contenido directamente según la URL
-                loadContent(currentUrl, false);
+            if (userLang.startsWith('es')) {
+                htmlFile = 'web/es.html'; 
+            } else if (userLang.startsWith('pt')) {
+                htmlFile = 'web/pt.html'; 
             }
+
+            loadContent(htmlFile, false);
         });
 
-        // Manejador de eventos para interceptar enlaces internos y externos
         document.addEventListener('click', function(event) {
             const target = event.target;
 
-            // Si el elemento clicado es un enlace
-            if (target.tagName === 'A') {
-                let href = target.getAttribute('href');
-
-                // Verificar si es un enlace interno o relativo
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
-                    event.preventDefault(); // Evita la carga completa de la página
+                    event.preventDefault(); 
 
-                    // Si el enlace no tiene un archivo de idioma explícito, se añade dinámicamente
                     if (!href.match(/(ingles|es|pt)\.html$/)) {
                         href = getLocalizedUrl(href); // Ajustar la URL al idioma
                     }
 
-                    loadContent(href); // Carga el contenido dinámicamente
+                    loadContent(href); 
                 } else if (href.startsWith('http://') || href.startsWith('https://')) {
-                    // Para enlaces externos, ajustamos la URL según el idioma
-                    event.preventDefault(); // Detenemos el comportamiento predeterminado
-                    href = getLocalizedUrl(href); // Ajustar la URL al idioma
-                    window.location.href = href; // Redirigir a la URL ajustada
+                    event.preventDefault(); 
+                    href = getLocalizedUrl(href); 
+                    window.location.href = href; 
                 }
             }
         });
