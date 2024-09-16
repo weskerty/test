@@ -116,11 +116,11 @@
 
             // Identificar el sufijo de idioma
             if (userLang.startsWith('es')) {
-                return url.replace(/(ingles|pt|es)\.html$/, 'es.html');
+                return url + 'es.html';
             } else if (userLang.startsWith('pt')) {
-                return url.replace(/(ingles|pt|es)\.html$/, 'pt.html');
+                return url + 'pt.html';
             } else {
-                return url.replace(/(ingles|pt|es)\.html$/, 'ingles.html');
+                return url + 'ingles.html';
             }
         }
 
@@ -154,9 +154,15 @@
             if (target.tagName === 'A') {
                 let href = target.getAttribute('href');
 
-                // Verificar si es un enlace interno (que empieza con "web/") o relativo
+                // Verificar si es un enlace interno o relativo
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
                     event.preventDefault(); // Evita la carga completa de la página
+
+                    // Si el enlace no tiene un archivo de idioma explícito, se añade dinámicamente
+                    if (!href.match(/(ingles|es|pt)\.html$/)) {
+                        href = getLocalizedUrl(href); // Ajustar la URL al idioma
+                    }
+
                     loadContent(href); // Carga el contenido dinámicamente
                 } else if (href.startsWith('http://') || href.startsWith('https://')) {
                     // Para enlaces externos, ajustamos la URL según el idioma
