@@ -62,6 +62,8 @@
                 return url + 'ru.html';
             } else if (userLang.startsWith('ar')) {
                 return url + 'ar.html';
+            } else if (userLang.startsWith('hi')) {
+                return url + 'hi.html';
             } else {
                 return url + 'ingles.html';
             }
@@ -81,6 +83,8 @@
                 htmlFile = 'web/ru.html'; 
             } else if (userLang.startsWith('ar')) {
                 htmlFile = 'web/ar.html'; 
+            } else if (userLang.startsWith('hi')) {
+                htmlFile = 'web/hi.html'; 
             }
 
             loadContent(htmlFile);
@@ -92,13 +96,13 @@
             if (target.tagName === 'A') {
                 let href = target.getAttribute('href');
 
-                // Desplazar hacia arriba al hacer clic en un enlace
+                // Ir arriba de la pagina al seleccionar un enlace interno
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 if (href.startsWith('web/') || href.startsWith('./') || href.startsWith('/')) {
                     event.preventDefault(); 
 
-                    if (!href.match(/(ingles|es|pt|fr|ru|ar)\.html$/)) {
+                    if (!href.match(/(ingles|es|pt|fr|ru|ar|hi)\.html$/)) {
                         href = getLocalizedUrl(href); 
                     }
 
@@ -107,13 +111,17 @@
                     event.preventDefault(); 
                     href = getLocalizedUrl(href); 
                     
-                    // Usar setTimeout para permitir que el desplazamiento a la parte superior se complete antes de redirigir
+                  // 300 es tiempo ajustable.
                     setTimeout(() => {
                         window.location.href = href; 
-                    }, 300); // Ajusta el tiempo si es necesario
+                    }, 300); 
                 }
             }
         });
+
+        window.onpopstate = function() {
+            location.reload(); // Recarga la página al dar atras, ya que no logre hacer funcionar una navegacion consistente hacia atras.
+        };
     </script>
 
     <!-- Este es el Widget de Discord, se puede personalizar para tu Server -->
