@@ -131,19 +131,27 @@
             }
         };
 
-        // Cargar contenido inicial basado en el idioma
+        // Cargar contenido inicial basado en la URL actual (para soportar "Atrás" o recarga)
         document.addEventListener("DOMContentLoaded", function() {
-            const userLang = navigator.language || navigator.userLanguage;
-            let htmlFile = 'web/ingles.html'; // Archivo predeterminado
+            let currentUrl = window.location.pathname;
 
-            if (userLang.startsWith('es')) {
-                htmlFile = 'web/es.html'; 
-            } else if (userLang.startsWith('pt')) {
-                htmlFile = 'web/pt.html'; 
+            // Si la URL actual es la raíz o el index.html, cargamos la página principal
+            if (currentUrl === '/' || currentUrl.endsWith('index.html')) {
+                const userLang = navigator.language || navigator.userLanguage;
+                let htmlFile = 'web/ingles.html'; // Archivo predeterminado
+
+                if (userLang.startsWith('es')) {
+                    htmlFile = 'web/es.html'; 
+                } else if (userLang.startsWith('pt')) {
+                    htmlFile = 'web/pt.html'; 
+                }
+
+                // Cargar contenido inicial según el idioma detectado
+                loadContent(htmlFile, false);
+            } else {
+                // Si la URL es un enlace externo, cargamos el contenido directamente según la URL
+                loadContent(currentUrl, false);
             }
-
-            // Cargar contenido inicial según el idioma detectado
-            loadContent(htmlFile, false);
         });
 
         // Manejador de eventos para interceptar enlaces internos y externos
