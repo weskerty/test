@@ -52,7 +52,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 1;
-            # Fondo Borroso. backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
         }
 
         h1, p {
@@ -89,9 +89,12 @@
                 }
 
                 // Cargar Disqus en la nueva sección
-                const disqusDiv = document.createElement('div');
-                disqusDiv.id = 'disqus_thread';
-                document.getElementById('content').appendChild(disqusDiv);
+                const disqusDiv = document.getElementById('disqus_thread');
+                if (!disqusDiv) {
+                    const newDisqusDiv = document.createElement('div');
+                    newDisqusDiv.id = 'disqus_thread';
+                    document.getElementById('content').appendChild(newDisqusDiv);
+                }
 
                 var disqus_config = function () {
                     this.page.url = window.location.href; 
