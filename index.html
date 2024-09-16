@@ -15,7 +15,7 @@
             overflow-x: hidden;
         }
         video#bg-video {
-            position: fixed;
+            position: fixed; 
             top: 50%;
             left: 50%;
             width: 100%;
@@ -96,7 +96,7 @@
 
                     // Actualiza la URL en la barra de navegación sin recargar la página.
                     if (pushState) {
-                        history.pushState({ filePath }, null, filePath);
+                        history.pushState(null, null, filePath);
                     }
 
                     // Inicializa los enlaces dentro del nuevo contenido cargado.
@@ -118,19 +118,21 @@
                     link.addEventListener('click', function(event) {
                         const href = this.getAttribute('href');
 
-                        // Prevenir la recarga completa de la página.
-                        event.preventDefault();
+                        // Verificar si el enlace apunta a un archivo HTML dentro de la carpeta web.
+                        if (href.includes('web/')) {
+                            event.preventDefault(); // Prevenir la recarga completa de la página.
 
-                        // Detectar el idioma y ajustar la URL del archivo.
-                        let newFile = href;
-                        if (userLang.startsWith('es')) {
-                            newFile = href.replace('ingles', 'es');
-                        } else if (userLang.startsWith('pt')) {
-                            newFile = href.replace('ingles', 'pt');
+                            // Detectar el idioma y ajustar la URL del archivo.
+                            let newFile = href;
+                            if (userLang.startsWith('es')) {
+                                newFile = href.replace('ingles', 'es');
+                            } else if (userLang.startsWith('pt')) {
+                                newFile = href.replace('ingles', 'pt');
+                            }
+
+                            // Cargar el nuevo contenido en el div sin recargar la página.
+                            loadContent(newFile);
                         }
-
-                        // Cargar el nuevo contenido en el div sin recargar la página.
-                        loadContent(newFile);
                     });
                 });
             }
@@ -154,11 +156,9 @@
                 })();
             }
 
-            // Manejar la navegación del historial (botones de atrás/adelante).
-            window.onpopstate = function(event) {
-                if (event.state && event.state.filePath) {
-                    loadContent(event.state.filePath, false); // Cargar contenido desde el historial sin cambiar la URL.
-                }
+            // Manejar la navegación del historial (al usar los botones de atrás/adelante del navegador).
+            window.onpopstate = function() {
+                loadContent(window.location.pathname, false); // Cargar contenido sin cambiar la URL.
             };
 
             // Cargar el contenido inicial basado en el idioma.
