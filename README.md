@@ -1,4 +1,12 @@
-[ezgif-7-ac23d21fbe.webm](https://github.com/user-attachments/assets/ac4f880c-667b-4a80-8797-07aab44c0651)
+TermuxTutorial 
+https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8
+
+
+
+![BolaMS](https://github.com/user-attachments/assets/c962b1cb-01f2-4872-a04b-047376d28a0a)
+
+
+[crystal-ball_1f52e.webm](https://github.com/user-attachments/assets/0c1bdf3c-ce8c-4a5e-a954-0d22fc62a6b3)
 
 
 ![GIF 16-9-2024 14-23-15](https://github.com/user-attachments/assets/7d103914-c7bd-44e9-b3b5-38ad9f2cdae6)
