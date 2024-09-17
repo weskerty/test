@@ -11,7 +11,7 @@ https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8
 
 ![GIF 16-9-2024 14-23-15](https://github.com/user-attachments/assets/7d103914-c7bd-44e9-b3b5-38ad9f2cdae6)
 
-![image](https://github.com/user-attachments/assets/6a2efba9-9b47-4195-9ae2-64592352e888)
+![LinuxMystic](https://github.com/user-attachments/assets/6a2efba9-9b47-4195-9ae2-64592352e888)
 
 ![crystal-ball_1f52e](https://github.com/user-attachments/assets/0a6086f1-b8bc-4567-93fa-102b68d55ab9)
 
