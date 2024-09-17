@@ -2,6 +2,10 @@ TermuxTutorial
 https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8
 
 
+https://github.com/user-attachments/assets/aa3794c1-a753-48f5-b178-a2f709b0820f
+
+
+
 
 ![BolaMS](https://github.com/user-attachments/assets/c962b1cb-01f2-4872-a04b-047376d28a0a)
 
