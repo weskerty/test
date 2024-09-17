@@ -1,8 +1,10 @@
 
 ![GIF 16-9-2024 14-23-15](https://github.com/user-attachments/assets/7d103914-c7bd-44e9-b3b5-38ad9f2cdae6)
 
+![image](https://github.com/user-attachments/assets/6a2efba9-9b47-4195-9ae2-64592352e888)
 
 
+![image](https://github.com/user-attachments/assets/1d33c20a-1af9-42ee-a6d7-4c2e03254f78)
 
 
 
