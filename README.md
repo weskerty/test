@@ -2,7 +2,12 @@ TermuxTutorial
 https://github.com/user-attachments/assets/a109c5ef-1124-437c-b616-5dc2ca7bdec8
 
 
+
 https://github.com/user-attachments/assets/aa3794c1-a753-48f5-b178-a2f709b0820f
+
+Stickers y Musica
+https://github.com/user-attachments/assets/b0e3c36a-a2c7-43bd-90e2-c2c6b86eac3d
+
 
 
 
