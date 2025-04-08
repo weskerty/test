@@ -4,3 +4,5 @@ FiloAris:![IMG-20250127-WA0050](https://github.com/user-attachments/assets/8e16d
 adminbasurero(https://github.com/user-attachments/assets/c270f35e-1983-4043-9e49-e0a9b647aa00)
 
 ![image](https://github.com/user-attachments/assets/a2e49f4f-089b-49b5-9d0f-26e7b30896fd)
+
+[tgs.zip](https://github.com/user-attachments/files/19654750/tgs.zip)
