@@ -331,3 +331,51 @@ code {
     backdrop-filter: blur(7px);
 }
 
+
+strong {
+    position: relative;
+    display: inline-block;
+    color: #ffeb3b;
+    text-shadow: 0 0 10px #ffeb3b;
+    animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+/* GIF  */
+strong::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: url('https://www.teamos.xyz/images/dUy8t.gif') no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 10px #ffeb3b; }
+    100% { text-shadow: 0 0 20px #ffeb3b, 0 0 30px #ffeb3b; }
+}
+
+.subtle-glow strong {
+    color: #4fc3f7;
+    text-shadow: 0 0 8px #4fc3f7;
+}
+
+.subtle-glow strong::before {
+    opacity: 0.7;
+}
+
+.rainbow-glow strong {
+    animation: rainbowGlow 4s ease-in-out infinite;
+}
+
+@keyframes rainbowGlow {
+    0% { color: #ff6b6b; text-shadow: 0 0 15px #ff6b6b; }
+    25% { color: #4ecdc4; text-shadow: 0 0 15px #4ecdc4; }
+    50% { color: #45b7d1; text-shadow: 0 0 15px #45b7d1; }
+    75% { color: #f9ca24; text-shadow: 0 0 15px #f9ca24; }
+    100% { color: #ff6b6b; text-shadow: 0 0 15px #ff6b6b; }
+}
